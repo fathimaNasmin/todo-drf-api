@@ -1,8 +1,9 @@
 """Database Models."""
-
+import uuid
 from django.utils.translation import gettext_lazy as _
 from django.conf import settings
 from django.db import models
+from django.core import validators
 from django.contrib.auth.models import (
     AbstractBaseUser,
     BaseUserManager,
@@ -47,6 +48,8 @@ class User(AbstractBaseUser, PermissionsMixin):
     name = models.CharField(max_length=255)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
+    preferred_theme = models.CharField(max_length=10, choices=[('light', 'Light'), ('dark', 'Dark')], default='light')
+
 
     objects = UserManager()
 
@@ -54,3 +57,17 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     def __str__(self):
         return self.name
+    
+    
+class Task(models.Model):
+    """Task model."""
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, 
+         editable=False)
+    name = models.CharField(max_length=255, validators=[
+        validators.MinLengthValidator(limit_value=3, message='Task name should be minimum 3 characters.')
+    ])
+    done = models.BooleanField(default=False)
+    created_on = models.DateTimeField(auto_now_add=True)
+    updated_on = models.DateTimeField(auto_now=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    
