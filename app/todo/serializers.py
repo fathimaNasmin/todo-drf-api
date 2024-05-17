@@ -7,13 +7,15 @@ from django.utils.translation import gettext as _
 
 from rest_framework import serializers
 
+from todo.models import Task
+
 
 class UserSerializer(serializers.ModelSerializer):
     """Serialize the user object."""
     
     class Meta:
         model = get_user_model()
-        fields = ['name', 'email', 'password']
+        fields = ['name', 'email', 'password', 'preferred_theme']
         extra_kwargs = {
             'password': {
                 'write_only': True,
@@ -61,3 +63,12 @@ class AuthTokenSerializer(serializers.Serializer):
         
         attrs['user'] = user
         return attrs
+    
+
+class TaskSerializer(serializers.ModelSerializer):
+    """Serializer for Task."""
+    user = UserSerializer(read_only=True)
+    
+    class Meta:
+        model = Task
+        fields = '__all__'

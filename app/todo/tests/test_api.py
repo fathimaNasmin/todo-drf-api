@@ -4,6 +4,8 @@ from django.test import TestCase
 from django.urls import reverse
 from django.contrib.auth import get_user_model
 
+from todo.models import Task
+
 from rest_framework.test import APIClient
 from rest_framework import status
 
@@ -11,6 +13,13 @@ from rest_framework import status
 REGISTER_USER_URL = reverse('todo:register')
 LOGIN_USER_URL = reverse('todo:login')
 USER_PROFILE_URL = reverse('todo:profile')
+
+TASK_URL = reverse('todo:task-list')
+
+
+def task_detail_url(task_id):
+    """return url for task detail."""
+    return reverse('todo:task-detail', args=[task_id])
 
 
 def create_user(**params):
@@ -156,3 +165,66 @@ class PrivateUserApiTests(TestCase):
         self.assertTrue(self.user.check_password(payload['password']))
         self.assertEqual(res.status_code, status.HTTP_200_OK)
         
+
+class TaskAPITest(TestCase):
+    """Test cases for task endpoints."""
+    def setUp(self):
+        self.client = APIClient()
+        self.user = create_user(email='testuser@example.com', password='testpassword')
+        self.client.force_authenticate(self.user)
+        self.task = Task.objects.create(user=self.user, name='Test Task')
+
+    def test_get_tasks(self):
+        """Test tasks retreival of authenticated user."""
+        response = self.client.get(TASK_URL)
+        
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data), 1)
+
+    def test_create_task(self):
+        """Test task creation successful."""
+        data = {
+            'name': 'New Task'
+        }
+        
+        response = self.client.post(TASK_URL, data)
+        
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(Task.objects.count(), 2)
+        self.assertEqual(response.data['name'], data['name'])
+
+    def test_update_task(self):
+        """Test task on updation success."""
+        payload = {
+            'name': 'Updated Task',
+            'done': True
+        }
+        url = task_detail_url(self.task.id)
+        response = self.client.patch(url, payload)
+        
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        
+        self.task.refresh_from_db()
+        self.assertEqual(self.task.name, payload['name'])
+        self.assertTrue(self.task.done)
+
+    def test_delete_task(self):
+        """Test task delete endpoint."""
+        url = task_detail_url(self.task.id)
+        response = self.client.delete(url)
+        
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertEqual(Task.objects.count(), 0)
+
+    def test_unauthenticated_access(self):
+        """Test access to unauthenticated user."""
+        self.client.logout()
+        
+        response = self.client.get(TASK_URL)
+        
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+        response = self.client.post(TASK_URL, {'name': 'Task'})
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+    def tearDown(self):
+        self.client.logout()
