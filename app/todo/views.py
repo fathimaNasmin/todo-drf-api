@@ -36,5 +36,9 @@ class TaskViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.TaskSerializer
     permission_classes = [permissions.IsAuthenticated]
     
+    def get_queryset(self):
+        """Retrieve tasks for authenticated user."""
+        return self.queryset.filter(user=self.request.user).order_by('-id')
+    
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
