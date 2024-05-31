@@ -94,14 +94,25 @@ WSGI_APPLICATION = 'app.wsgi.application'
 #     }
 # }
 
+# DATABASES = {
+#    'default': {
+#        'ENGINE': 'django.db.backends.postgresql',
+#        'NAME': 'railway',
+#        'USER': 'postgres',
+#        'PASSWORD': 'VHshMWECbUSZTCXSEMKRxtENUDDUlNVK',
+#        'HOST': 'roundhouse.proxy.rlwy.net',
+#        'PORT': '34142',
+#    }
+# }
+
 DATABASES = {
    'default': {
        'ENGINE': 'django.db.backends.postgresql',
-       'NAME': 'railway',
+       'NAME': 'todo_db',
        'USER': 'postgres',
-       'PASSWORD': 'VHshMWECbUSZTCXSEMKRxtENUDDUlNVK',
-       'HOST': 'roundhouse.proxy.rlwy.net',
-       'PORT': '34142',
+       'PASSWORD': 'amy0711',
+       'HOST': 'localhost',
+       'PORT': '5432',
    }
 }
 
