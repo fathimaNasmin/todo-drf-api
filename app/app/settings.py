@@ -95,11 +95,11 @@ WSGI_APPLICATION = 'app.wsgi.application'
 DATABASES = {
    'default': {
        'ENGINE': 'django.db.backends.postgresql',
-       'NAME': 'todo_db',
+       'NAME': 'railway',
        'USER': 'postgres',
-       'PASSWORD': 'amy0711',
-       'HOST': 'localhost',
-       'PORT': '5432',
+       'PASSWORD': 'VHshMWECbUSZTCXSEMKRxtENUDDUlNVK',
+       'HOST': 'roundhouse.proxy.rlwy.net',
+       'PORT': '34142',
    }
 }
 
