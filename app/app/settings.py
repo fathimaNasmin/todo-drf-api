@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-3hhg5=nnh(83-d1xh1_kxrc2$#yfk3_($g*%^31zc%c%a2w+t=
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['todorestapi1-3ac19ca1c905.herokuapp.com']
 CSRF_COOKIE_SECURE = True
 SESSION_COOKIE_SECURE = True
 
