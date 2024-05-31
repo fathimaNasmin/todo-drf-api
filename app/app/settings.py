@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 
 from pathlib import Path
 import os
+import dj_database_url
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -94,27 +95,30 @@ WSGI_APPLICATION = 'app.wsgi.application'
 #     }
 # }
 
-# DATABASES = {
-#    'default': {
-#        'ENGINE': 'django.db.backends.postgresql',
-#        'NAME': 'railway',
-#        'USER': 'postgres',
-#        'PASSWORD': 'VHshMWECbUSZTCXSEMKRxtENUDDUlNVK',
-#        'HOST': 'roundhouse.proxy.rlwy.net',
-#        'PORT': '34142',
-#    }
-# }
-
 DATABASES = {
    'default': {
        'ENGINE': 'django.db.backends.postgresql',
-       'NAME': 'todo_db',
+       'NAME': 'railway',
        'USER': 'postgres',
-       'PASSWORD': 'amy0711',
-       'HOST': 'localhost',
-       'PORT': '5432',
+       'PASSWORD': 'VHshMWECbUSZTCXSEMKRxtENUDDUlNVK',
+       'HOST': 'roundhouse.proxy.rlwy.net',
+       'PORT': '34142',
    }
 }
+
+# DATABASES = {
+#    'default': {
+#        'ENGINE': 'django.db.backends.postgresql',
+#        'NAME': 'todo_db',
+#        'USER': 'postgres',
+#        'PASSWORD': 'amy0711',
+#        'HOST': 'localhost',
+#        'PORT': '5432',
+#    }
+# }
+
+db_from_env = dj_database_url.config(conn_max_age=600)
+DATABASES['default'].update(db_from_env)
 
 
 # Password validation
