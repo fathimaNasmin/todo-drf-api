@@ -87,15 +87,24 @@ WSGI_APPLICATION = 'app.wsgi.application'
 # }
 
 DATABASES = {
-   'default': {
-       'ENGINE': 'django.db.backends.postgresql',
-       'NAME': 'todo_db',
-       'USER': 'postgres',
-       'PASSWORD': 'amy0711',
-       'HOST': 'localhost',
-       'PORT': '5432',
-   }
+    'default': dj_database_url.config(
+        default=os.getenv('DATABASE_URL')
+    )
 }
+
+DATABASES['default']['OPTIONS'] = {'sslmode': 'require'}
+
+
+# DATABASES = {
+#    'default': {
+#        'ENGINE': 'django.db.backends.postgresql',
+#        'NAME': 'todo_db',
+#        'USER': 'postgres',
+#        'PASSWORD': 'amy0711',
+#        'HOST': 'localhost',
+#        'PORT': '5432',
+#    }
+# }
 
 # db_from_env = dj_database_url.config(conn_max_age=600)
 # DATABASES['default'].update(db_from_env)
